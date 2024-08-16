@@ -1,0 +1,22 @@
+---
+- name: "Start instances"
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - "./vars/{{ host_name }}.yaml"
+  tasks:
+    - name: "Start instances"
+      amazon.aws.ec2_instance:
+        instance_ids: "{{ ec2_instance_id}}"
+        region: "{{ region }}"
+        state: started
+        wait: True
+        network:
+          assign_public_ip: yes
+        termination_protection: true
+      register: "ec2_ip_address"
+    - name: "show public ip"
+      debug:
+        msg: "{{ ec2_ip_address }}"
+
